@@ -49,10 +49,14 @@ Since this was slowing down the processing on the project video, I decided to go
 Using gray scale resulted in loss of accuracy(went down to 97).
 I also tried L-channel from HLS color space, but it was giving very similar results as gray.
 
+Lastly I tried YCrCb color space which resulted in very high accuracy and also showed improved
+performance in detecting the vehicles.
+
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
 I have included Spatial Binning of colors, Histogram of colors and HOG for feature vector.
 After normalizing these features, I used it to train Linear SVM.
+I made use of the penalty parameter to reduce the number of false positives reported by the model.
 
 ### Sliding Window Search
 
@@ -83,6 +87,10 @@ Here's a [link to my video result](./output.mp4)
 I made use of the technique mentioned in the lectures.
 Basically apply a threshold on the detected windows and remove windows that does not meet the threshold criteria. Then I labelled each of the blobs and plotted bouding boxes around them.
 
+For the video  I maintained a history of vehicle detections in the last 8 frames and applied
+a threshold on the image formed by combining these frames. This helped reduce the number of
+false positives and stabilize the detected window.
+
 ### Below is the image of the headmap and the bounding boxes.
 ![alt text][image3]
 ---
@@ -93,5 +101,3 @@ Basically apply a threshold on the detected windows and remove windows that does
 
 My pipeline is inefficient in computing HOG features since it does not use subsampling.
 Since I compute HOG on every single window when doing sliding window search, my model is very slow.
-Also I am not maintaing information about positive samples from the previous frames.
-Using this information would help the model perform better.
